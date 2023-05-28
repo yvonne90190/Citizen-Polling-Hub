@@ -51,6 +51,8 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     content = db.Column(db.String(500), nullable=False)
     poll_id = db.Column(db.Integer, db.ForeignKey('Question.poll_id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('Comment.comment_id'))
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[comment_id]), lazy='dynamic')
 
 class Question(db.Model):
     __tablename__ = 'Question'
