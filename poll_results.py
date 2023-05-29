@@ -3,34 +3,22 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from datetime import datetime
-from ORM import Poll, Options, Vote, Question
+from ORM import Poll, Options, Vote, Question, app, db
 
-app = Flask(__name__)
-# 設定資料庫連線地址
-DB_URI = 'mysql+pymysql://bochiao:qwerty@140.112.211.104:3306/DBFINAL'
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-# 是否追蹤資料庫修改，一般不開啟，會影響效能
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# 是否顯示底層執行的 SQL 語句
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-
-manager = LoginManager()
-manager.init_app(app)
-
-@app.route('/poll_results/<int:poll_id>', methods=['GET'])
+@app.route('/poll_results/<path:poll_id>', methods=['GET'])
 def getPollResult(poll_id):
-    poll = db.session.get(Poll, poll_id)
+
+    poll = Poll.query.filter_by(poll_id=poll_id).first()
 
     if not poll :
-        return jsonify({'message': 'Poll-{:d} does not exist.'.format(poll_id)}), 400
+        return jsonify({'error': f'Poll:{poll_id} does not exist.'}), 400
     if not poll.is_approved :
-        return jsonify({'message': 'Poll-{:d} has not been approved yet.'.format(poll_id)}), 400
+        return jsonify({'error': f'Poll:{poll_id} has not been approved yet.'}), 400
     else:        
         if poll.start_date > datetime.now().date():
-            return jsonify({'message': 'Poll-{:d} has not started yet.'.format(poll_id)}), 400
+            return jsonify({'error': f'Poll:{poll_id} has not started yet.'}), 400
         if poll.end_date > datetime.now().date():
-            return jsonify({'message': 'Poll-{:d} has not ended yet.'.format(poll_id)}), 400
+            return jsonify({'error': f'Poll:{poll_id} has not ended yet.'}), 400
     
     questions = Question.query.filter_by(poll_id=poll_id).all()
     results = []
@@ -40,7 +28,7 @@ def getPollResult(poll_id):
             'options': []
         }
         options = Options.query.filter_by(poll_id=poll_id, question_id=question.question_id).all()
-        total_cnt = Vote.query.filter_by(poll_id=poll, question_id=question.question_id).count()
+        total_cnt = Vote.query.filter_by(poll_id=poll_id, question_id=question.question_id).count()
         for option in options:
             vote_cnt = option.vote_count
             if total_cnt==0 :
