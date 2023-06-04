@@ -1,11 +1,12 @@
 from ORM import app, db, User, login_manager
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 import re
 from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_user, logout_user, login_required
 
+bp = Blueprint('user_registration_and_login', __name__)
 
-@app.route("/register", methods=["POST"])
+@bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
 
@@ -53,7 +54,7 @@ def register():
 def load_user(user_id):
     return User.query.get(user_id)
 
-@app.route('/login', methods=['POST'])
+@bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     email = data.get('email')
@@ -94,7 +95,7 @@ def login():
     }), 200
 
 
-@app.route('/logout')
+@bp.route('/logout')
 @login_required
 def logout():
     logout_user()

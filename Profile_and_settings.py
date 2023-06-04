@@ -1,9 +1,11 @@
 from ORM import app, db, User
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from flask_login import login_required, current_user
 
+
+bp = Blueprint('profile_and_settings', __name__)
 # 用戶可以查看自己的個人資料，如用戶名、電子郵件等。
-@app.route('/user/get_information', methods=['GET'])
+@bp.route('/user/get_information', methods=['GET'])
 @login_required
 def get_user_information():
     user_id = current_user.user_id
@@ -17,7 +19,7 @@ def get_user_information():
     return jsonify({'error': 'User doesn\'t exist.'}), 400
 
 # 用戶可以修改帳戶設置，如密碼等。
-@app.route('/user/reset_password', methods=['POST'])
+@bp.route('/user/reset_password', methods=['POST'])
 @login_required
 def reset_password():
     data = request.get_json()

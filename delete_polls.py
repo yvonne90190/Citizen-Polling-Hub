@@ -1,8 +1,12 @@
 from ORM import app, Poll, db
 from flask_login import login_required, current_user
-from flask import jsonify
+from flask import jsonify, Blueprint
 
-@app.route('/delete_poll/<path:poll_id>', methods=['DELETE'])
+
+bp = Blueprint('delete_polls', __name__)
+
+
+@bp.route('/delete_poll/<path:poll_id>', methods=['DELETE'])
 @login_required
 def delete_poll(poll_id):
     poll = Poll.query.get(poll_id)
@@ -16,6 +20,7 @@ def delete_poll(poll_id):
     db.session.commit()
 
     return jsonify({"message": "Poll deleted successfully."}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)

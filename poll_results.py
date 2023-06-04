@@ -1,23 +1,27 @@
 
-from flask import jsonify
+from flask import jsonify, Blueprint
 from datetime import datetime
 from ORM import Poll, Options, Vote, Question, app, db
 
-@app.route('/poll_results/<path:poll_id>', methods=['GET'])
+
+bp = Blueprint('poll_results', __name__)
+
+
+@bp.route('/poll_results/<path:poll_id>', methods=['GET'])
 def getPollResult(poll_id):
 
     poll = Poll.query.filter_by(poll_id=poll_id).first()
 
-    if not poll :
+    if not poll:
         return jsonify({'error': f'Poll:{poll_id} does not exist.'}), 400
-    if not poll.is_approved :
+    if not poll.is_approved:
         return jsonify({'error': f'Poll:{poll_id} has not been approved yet.'}), 400
-    else:        
+    else:
         if poll.start_date > datetime.now().date():
             return jsonify({'error': f'Poll:{poll_id} has not started yet.'}), 400
         if poll.end_date > datetime.now().date():
             return jsonify({'error': f'Poll:{poll_id} has not ended yet.'}), 400
-    
+
     questions = Question.query.filter_by(poll_id=poll_id).all()
     results = []
     for question in questions:
@@ -25,11 +29,13 @@ def getPollResult(poll_id):
             'question_id': question.question_id,
             'options': []
         }
-        options = Options.query.filter_by(poll_id=poll_id, question_id=question.question_id).all()
-        total_cnt = Vote.query.filter_by(poll_id=poll_id, question_id=question.question_id).count()
+        options = Options.query.filter_by(
+            poll_id=poll_id, question_id=question.question_id).all()
+        total_cnt = Vote.query.filter_by(
+            poll_id=poll_id, question_id=question.question_id).count()
         for option in options:
             vote_cnt = option.vote_count
-            if total_cnt==0 :
+            if total_cnt == 0:
                 percentage = 0
             else:
                 percentage = 100 * vote_cnt/total_cnt
@@ -40,8 +46,9 @@ def getPollResult(poll_id):
             }
             question_result['options'].append(option_result)
         results.append(question_result)
-    
+
     return jsonify({'poll_id': poll_id, 'results': results}), 200
+
 
 if __name__ == '__main__':
     with app.app_context():

@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
 import configparser
 import datetime
-
+from databes import db
 app = Flask(__name__)
 # 設定資料庫連線地址
 db_config = configparser.ConfigParser()
@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 是否顯示底層執行的 SQL 語句
 app.config['SQLALCHEMY_ECHO'] = True
 
-db = SQLAlchemy(app)
+db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 app.secret_key = '111DBMSfinal'

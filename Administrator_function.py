@@ -1,9 +1,12 @@
 from ORM import app, db, User, Poll
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from flask_login import login_user, login_required, current_user
 
+
+bp = Blueprint('admin', __name__)
+
 # 網站管理員可以審核和管理用戶創建的公投，如審核不適當的內容、刪除違規公投等。
-@app.route('/admin/approve_poll', methods=['POST'])
+@bp.route('/admin/approve_poll', methods=['POST'])
 @login_required
 def approve_poll():
     # 若非管理員，則回傳 "error":"You are not admin."
@@ -21,7 +24,7 @@ def approve_poll():
     db.session.commit()
     return jsonify({"message":f"Poll {poll_id_to_approve} '{poll_to_approve.title}' is approved."}), 200
 
-@app.route('/admin/disapprove_poll', methods=['POST'])
+@bp.route('/admin/disapprove_poll', methods=['POST'])
 @login_required
 def disapprove_poll():
     # 若非管理員，則回傳 "error":"You are not admin."
@@ -39,13 +42,13 @@ def disapprove_poll():
     db.session.commit()
     return jsonify({"message":f"Poll {poll_id_to_disapprove} '{poll_to_disapprove.title}' is disapproved."}), 200
 
-@app.route('/admin/delete_comment', methods=['POST'])
+@bp.route('/admin/delete_comment', methods=['POST'])
 @login_required
 def delete_comment():
     pass
 
 # 網站管理員可以管理用戶帳戶，如禁用違規用戶。
-@app.route('/admin/ban_user', methods=['POST'])
+@bp.route('/admin/ban_user', methods=['POST'])
 @login_required
 def ban_user():
     # 若非管理員，則回傳 "error":"You are not admin."
@@ -63,7 +66,7 @@ def ban_user():
     db.session.commit()
     return jsonify({"message":f"User {user_id_to_disable} '{user_to_disable.username}' is disabled."}), 200
 
-@app.route('/admin/reactivate_user', methods=['POST'])
+@bp.route('/admin/reactivate_user', methods=['POST'])
 @login_required
 def reactivate_user():
     # 若非管理員，則回傳 "error":"You are not admin."

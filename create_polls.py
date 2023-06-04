@@ -1,9 +1,12 @@
 from ORM import app, db, Poll, Question, Options
 from datetime import datetime
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from flask_login import login_required, current_user
 
-@app.route('/create_poll', methods=['POST'])
+
+bp = Blueprint('create_polls', __name__)
+
+@bp.route('/create_poll', methods=['POST'])
 @login_required
 def create_poll():
     data = request.get_json()
