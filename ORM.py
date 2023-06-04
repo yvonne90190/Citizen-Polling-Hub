@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
 import configparser
-
+import datetime
 
 app = Flask(__name__)
 # 設定資料庫連線地址
@@ -50,8 +50,8 @@ class Comment(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), nullable=False)
     content = db.Column(db.String(500), nullable=False)
-    poll_id = db.Column(db.Integer, db.ForeignKey('Question.poll_id'), nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('Comment.comment_id'))
+    poll_id = db.Column(db.Integer, db.ForeignKey('Poll.poll_id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('Comment.comment_id'), server_default=comment_id, nullable=True)
     replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[comment_id]), lazy='dynamic')
 
 class Question(db.Model):
@@ -80,3 +80,5 @@ class Vote(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
+
