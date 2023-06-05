@@ -51,6 +51,9 @@ def add_reply(poll_id, comment_id):
     
     content = request.json.get('content')
 
+    if not content or content.strip() == "":
+            return jsonify({"error": "Comment cannot be empty"}), 400
+
     reply = Comment(user_id=current_user.user_id, content=content, poll_id=poll.poll_id, parent_id=parent.comment_id)
     db.session.add(reply)
     db.session.commit()
