@@ -91,6 +91,7 @@ def login():
 
     login_user(user)
     return jsonify({
+            "user_id": user.user_id,
             "message": "Logged in successfully."
     }), 200
 
