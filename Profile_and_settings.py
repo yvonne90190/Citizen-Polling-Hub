@@ -13,7 +13,7 @@ def get_user_information():
     
     # 如果找到使用者，返回相關資訊
     if user:
-        return jsonify({"message": "User information returned.", "username": user.username, "email": user.email}), 200
+        return jsonify({"message": "User information returned.", "user_id":user.user_id, "username": user.username, "email": user.email}), 200
     
     # 如果找不到使用者，返回相應的錯誤訊息
     return jsonify({'error': 'User doesn\'t exist.'}), 400
