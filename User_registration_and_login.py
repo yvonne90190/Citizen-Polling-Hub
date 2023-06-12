@@ -59,7 +59,7 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-
+    
     # 利用正則表達式檢查email形式是否符合
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return jsonify({
@@ -90,6 +90,7 @@ def login():
         }), 401
 
     login_user(user)
+ 
     return jsonify({
             "user_id": user.user_id,
             "message": "Logged in successfully."
