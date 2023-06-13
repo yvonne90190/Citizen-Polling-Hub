@@ -31,7 +31,7 @@ def vote(poll_id):
         return jsonify({'error': 'User has already voted for this poll'}), 400
 
     votes = request.json.get('votes')
-
+    print(votes)
     # Check if the user has voted for every question of the poll
     question_ids = {vote['question_id'] for vote in votes}
     poll_question_ids = {question.question_id for question in Question.query.filter_by(
@@ -43,10 +43,11 @@ def vote(poll_id):
         question_id = vote['question_id']
         option_id = vote['option_id']
 
-        try:
-            question_id = Question.query.get_or_404(question_id)
-        except:
-            return jsonify({"error": "Question not found."}), 404
+        # try:
+        #     # Check if the question exists in the poll and query with the question_id and poll
+        #     question_id = Question.filter_by()
+        # except:
+        #     return jsonify({"error": "Question not found."}), 404
 
         # Create a new vote object
         new_vote = Vote(user_id=current_user.user_id, poll_id=poll.poll_id,
