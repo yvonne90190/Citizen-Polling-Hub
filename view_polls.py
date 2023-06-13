@@ -9,7 +9,7 @@ bp = Blueprint('view_polls', __name__)
 @bp.route('/polls/ongoing')
 def view_ongoing_polls():
     ongoing_polls = Poll.query.filter(Poll.start_date <= db.func.current_date(
-    ), Poll.end_date >= db.func.current_date()).all()
+    ), Poll.end_date >= db.func.current_date(), Poll.is_approved == 1).all()
 
     if len(ongoing_polls) == 0:
         return jsonify({"message": "No ongoing polls available."}), 204
@@ -26,7 +26,7 @@ def view_ongoing_polls():
 @bp.route('/polls/completed')
 def view_completed_polls():
     completed_polls = Poll.query.filter(
-        Poll.end_date < db.func.current_date()).all()
+        Poll.end_date < db.func.current_date(), Poll.is_approved == 1).all()
 
     if len(completed_polls) == 0:
         return jsonify({"message": "No completed polls available."}), 204
