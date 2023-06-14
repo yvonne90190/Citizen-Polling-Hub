@@ -1,12 +1,13 @@
-from ORM import app, db, User, Poll, Question, Options, Comment
+from ORM import app, db, User, Poll, Question, Options, Comment, login_manager
 from flask import jsonify, Blueprint
-
+from flask_login import login_required, current_user
 bp = Blueprint('view_polls', __name__)
 
 # View ongoning polls
 
 
 @bp.route('/polls/ongoing')
+@login_required
 def view_ongoing_polls():
     ongoing_polls = Poll.query.filter(Poll.start_date <= db.func.current_date(
     ), Poll.end_date >= db.func.current_date(), Poll.is_approved == 1).all()
@@ -24,6 +25,7 @@ def view_ongoing_polls():
 
 
 @bp.route('/polls/completed')
+@login_required
 def view_completed_polls():
     completed_polls = Poll.query.filter(
         Poll.end_date < db.func.current_date(), Poll.is_approved == 1).all()
@@ -40,7 +42,27 @@ def view_completed_polls():
 # View all polls
 
 
+@bp.route('/polls/unapproved')
+@login_required
+def view_unapproved_polls():
+
+    if current_user.email != 'admin@nccu.edu.tw':
+        return jsonify({"error": "You are not admin."}), 401
+    ongoing_polls = Poll.query.filter(Poll.start_date <= db.func.current_date(
+    ), Poll.end_date >= db.func.current_date(), Poll.is_approved == 0).all()
+
+    response = {}
+    if len(ongoing_polls) > 0:
+        response['ongoing_polls'] = [
+            poll_to_dict(poll) for poll in ongoing_polls]
+    if len(response) == 0:
+        return jsonify({"error": "No polls available."}), 404
+
+    return jsonify({"message": response}), 200
+
+
 @bp.route('/polls')
+@login_required
 def view_all_polls():
     ongoing_polls = Poll.query.filter(Poll.start_date <= db.func.current_date(
     ), Poll.end_date >= db.func.current_date()).all()
@@ -66,6 +88,7 @@ def view_all_polls():
 
 
 @bp.route('/polls/<path:poll_id>', methods=['GET'])
+@login_required
 def get_poll(poll_id):
     try:
         poll = Poll.query.get_or_404(poll_id)
@@ -94,7 +117,9 @@ def get_poll(poll_id):
             'options': [option.text for option in options]
         }
         poll_data['questions'].append(question_data)
-
+    # sort by question_id and inplace
+    poll_data['questions'].sort(key=lambda x: x['question_id'])
+    print(poll_data['questions'])
     comments = Comment.query.filter_by(poll_id=poll_id).all()
     poll_data['comments'] = [{'comment_id': comment.comment_id,
                               'content': comment.content} for comment in comments]
@@ -112,6 +137,11 @@ def poll_to_dict(poll):
         'end_date': poll.end_date.strftime('%Y-%m-%d'),
         'is_approved': poll.is_approved
     }
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
 
 
 if __name__ == '__main__':
