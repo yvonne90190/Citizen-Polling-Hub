@@ -54,12 +54,61 @@ def register():
 def load_user(user_id):
     return User.query.get(user_id)
 
+@bp.route('/login/admin', methods=['POST'])
+def login_admin():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+     
+    # 利用正則表達式檢查email形式是否符合
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return jsonify({
+                "error": "Invalid email format."
+        }), 400
+
+    # 檢查是否有輸入信箱及密碼
+    if not email or not password:
+        return jsonify({
+                "error": "Email or password not provided."
+        }), 400
+    try:
+        user = User.query.filter_by(email=email).first()
+    except SQLAlchemyError:
+        return jsonify({
+                "error": "Database error."
+        }), 500
+  
+    if not user:
+        return jsonify({
+                "error": "Login failed. The email hasn't been registered."
+            }), 401
+ 
+    if user.password != password:
+        return jsonify({
+                "error": "Login failed. The password is not correct."
+        }), 401
+    
+    if user.is_active == 0:
+        return jsonify({
+                "error": "Login failed. The user is not active."
+        }), 401
+    if user.email!= "admin@nccu.edu.tw":
+        return jsonify({
+                "error": "Login failed. You are not admin."
+        }), 401
+    login_user(user)
+ 
+    return jsonify({
+            "user_id": user.user_id,
+            "message": "Logged in successfully.",
+    }), 200
+
 @bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-
+    
     # 利用正則表達式檢查email形式是否符合
     if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
         return jsonify({
@@ -90,9 +139,10 @@ def login():
         }), 401
 
     login_user(user)
+ 
     return jsonify({
             "user_id": user.user_id,
-            "message": "Logged in successfully."
+            "message": "Logged in successfully.",
     }), 200
 
 

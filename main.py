@@ -1,4 +1,4 @@
-import ORM
+from ORM import app
 from flask_login import LoginManager, UserMixin
 from flask import Flask, Blueprint, jsonify, request
 from add_questions import bp as add_questions_bp
@@ -12,34 +12,8 @@ from vote_polls import bp as vote_polls_bp
 from view_polls import bp as view_polls_bp
 from comment_and_reply import bp as comment_and_reply_bp
 
-import configparser
-import datetime
-from databes import db
-from flask_cors import CORS
 
-
-app = Flask(__name__)
-CORS(app)
-#db conncet
-db_config = configparser.ConfigParser()
-db_config.read('db_connect.ini')
-def get_db_uri(cfg):
-    res = "mysql+pymysql://" + cfg.get("user") + ":" + cfg.get("password") + "@" + cfg.get("host") + ":" + cfg.get("port") + "/" + cfg.get("database")    
-    return res
-conn = get_db_uri(db_config['DB_CONNECT'])
-app.config['SQLALCHEMY_DATABASE_URI'] = conn
-# 是否追蹤資料庫修改，一般不開啟，會影響效能
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# 是否顯示底層執行的 SQL 語句
-app.config['SQLALCHEMY_ECHO'] = True
-
-db.init_app(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-app.secret_key = '111DBMSfinal'
-
-
-#blue print
+# blue print
 app.register_blueprint(add_questions_bp)
 app.register_blueprint(administrator_function_bp)
 app.register_blueprint(create_polls_bp)
@@ -51,6 +25,6 @@ app.register_blueprint(vote_polls_bp)
 app.register_blueprint(view_polls_bp)
 app.register_blueprint(comment_and_reply_bp)
 
-# app.secret_key = '111DBMSfinal'
+
 if __name__ == "__main__":
     app.run(debug=True, port=3000)

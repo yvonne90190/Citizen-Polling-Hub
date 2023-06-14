@@ -15,7 +15,6 @@ def create_poll():
     start_date = data.get('start_date')
     end_date = data.get('end_date')
     questions = data.get('questions')
-
     # 確認每個欄位是否都有輸入值
     if not title or not description or not start_date or not end_date:
         return jsonify({"error": "Missing required fields"}), 400
@@ -32,7 +31,7 @@ def create_poll():
     poll = Poll.query.filter_by(title=title).first()
     if poll:
         return jsonify({"error": "The Poll already exists."}), 400
-
+   
     new_poll = Poll(title=title, description=description, start_date=start_date, end_date=end_date, creator_id=current_user.user_id)
     db.session.add(new_poll)
     db.session.flush()

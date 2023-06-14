@@ -32,21 +32,17 @@ def vote(poll_id):
 
     votes = request.json.get('votes')
 
-    # Check if the user has voted for every question of the poll
-    question_ids = {vote['question_id'] for vote in votes}
-    poll_question_ids = {question.question_id for question in Question.query.filter_by(
-        poll_id=poll.poll_id).all()}
-    if question_ids != poll_question_ids:
-        return jsonify({'error': 'Please vote for every question of the poll'}), 400
+    if len(votes) == 2:
+        # Check if the user has voted for every question of the poll
+        question_ids = {vote['question_id'] for vote in votes}
+        poll_question_ids = {question.question_id for question in Question.query.filter_by(
+            poll_id=poll.poll_id).all()}
+        if question_ids != poll_question_ids:
+            return jsonify({'error': 'Please vote for every question of the poll'}), 400
 
     for vote in votes:
         question_id = vote['question_id']
         option_id = vote['option_id']
-
-        try:
-            question_id = Question.query.get_or_404(question_id)
-        except:
-            return jsonify({"error": "Question not found."}), 404
 
         # Create a new vote object
         new_vote = Vote(user_id=current_user.user_id, poll_id=poll.poll_id,

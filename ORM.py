@@ -4,7 +4,10 @@ from flask_login import LoginManager, UserMixin
 import configparser
 import datetime
 from databes import db
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
+
 # 設定資料庫連線地址
 db_config = configparser.ConfigParser()
 db_config.read('db_connect.ini')
@@ -16,7 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = conn
 # 是否追蹤資料庫修改，一般不開啟，會影響效能
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # 是否顯示底層執行的 SQL 語句
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = False
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -80,5 +83,4 @@ class Vote(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-
 

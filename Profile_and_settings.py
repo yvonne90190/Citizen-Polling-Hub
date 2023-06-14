@@ -5,6 +5,8 @@ from flask_login import login_required, current_user
 
 bp = Blueprint('profile_and_settings', __name__)
 # 用戶可以查看自己的個人資料，如用戶名、電子郵件等。
+
+
 @bp.route('/user/get_information', methods=['GET'])
 @login_required
 def get_user_information():
@@ -19,7 +21,7 @@ def get_user_information():
     return jsonify({'error': 'User doesn\'t exist.'}), 400
 
 # 用戶可以修改帳戶設置，如密碼等。
-@bp.route('/user/reset_password', methods=['POST'])
+@bp.route('/user/reset_passwords', methods=['POST'])
 @login_required
 def reset_password():
     data = request.get_json()
