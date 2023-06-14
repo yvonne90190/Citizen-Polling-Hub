@@ -7,7 +7,7 @@ from flask_login import login_required, current_user
 bp = Blueprint('create_polls', __name__)
 
 @bp.route('/create_poll', methods=['POST'])
-# @login_required
+@login_required
 def create_poll():
     data = request.get_json()
     title = data.get('title')
