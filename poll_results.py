@@ -26,8 +26,10 @@ def getPollResult(poll_id):
     results = []
     for question in questions:
         question_result = {
+            "text": question.text,
             'question_id': question.question_id,
-            'options': []
+            'options': [],
+            'result': "",
         }
         options = Options.query.filter_by(
             poll_id=poll_id, question_id=question.question_id).all()
@@ -44,7 +46,22 @@ def getPollResult(poll_id):
                 'percentage': percentage,
                 'vote_cnt': vote_cnt
             }
+
             question_result['options'].append(option_result)
+
+        # sort by option_id and inplace
+        question_result['options'].sort(key=lambda x: x['option_id'])
+
+        # determine the result
+        suppose = question_result['options'][0]['vote_cnt']
+        oppose = question_result['options'][1]['vote_cnt']
+        if suppose > oppose and suppose > 0.25 * total_cnt:
+
+            #
+            question_result['result'] = 'pass'
+        else:
+            question_result['result'] = 'not pass'
+
         results.append(question_result)
 
     return jsonify({'poll_id': poll_id, 'results': results}), 200
