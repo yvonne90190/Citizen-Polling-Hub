@@ -1,4 +1,4 @@
-#This is nccu dbms final project.
+
 ## How to use
 
 ### 1. Install python3 and pip3
