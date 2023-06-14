@@ -5,6 +5,20 @@ from flask_login import login_user, login_required, current_user
 
 bp = Blueprint('admin', __name__)
 
+
+@bp.route('/admin/getAllUsers_unactive', methods=['GET'])
+@login_required
+def get_all_user_unactive():
+    if current_user.email != 'admin@nccu.edu.tw': return jsonify({"error":"You are not admin."}), 401
+    users = User.query.filter_by(is_active=0).all()
+    return jsonify({"users": [user_to_dict(user)  for user in users]}), 200
+@bp.route('/admin/getAllUsers_active', methods=['GET'])
+@login_required
+def get_all_user():
+    if current_user.email != 'admin@nccu.edu.tw': return jsonify({"error":"You are not admin."}), 401
+    users = User.query.filter_by(is_active=1).all()
+    return jsonify({"users": [user_to_dict(user)  for user in users]}), 200
+
 # 網站管理員可以審核和管理用戶創建的公投，如審核不適當的內容、刪除違規公投等。
 @bp.route('/admin/approve_poll', methods=['POST'])
 @login_required
@@ -57,7 +71,8 @@ def ban_user():
     data = request.get_json()
     user_id_to_disable = data['user_id_to_disable']
     user_to_disable = User.query.get(user_id_to_disable)
-
+   
+    if user_to_disable.user_id == 4: return jsonify({"error":"You can't ban admin."}), 401
     # 如果用戶 id 不存在，則回傳 "error": "User {id} doesn't exist."
     if not user_to_disable: return jsonify({"error":f"User {user_id_to_disable} doesn't exist."}), 400
     
@@ -85,5 +100,12 @@ def reactivate_user():
     return jsonify({"message":f"User {user_id_to_reactivate} '{user_to_reactivate.username}' is reactivated."}), 200
 
 
+def user_to_dict(user):
+    return {
+        'user_id': user.user_id,
+        "is_active": user.is_active,
+        'username': user.username,
+       
+    }
 if __name__ == '__main__':
     app.run(debug=True)
