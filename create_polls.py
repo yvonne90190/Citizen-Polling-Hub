@@ -1,4 +1,4 @@
-from ORM import app, db, Poll, Question, Options
+from ORM import app, db, Poll, Question
 from datetime import datetime
 from flask import request, jsonify, Blueprint
 from flask_login import login_required, current_user
@@ -53,14 +53,10 @@ def create_poll():
             db.session.add(new_question)
             db.session.commit()
 
-            for i in range(2): 
-                new_option = Options(text=bool(i), poll_id=new_poll.poll_id, question_id=new_question.question_id, option_id=i+1)
-                db.session.add(new_option)
-                db.session.commit()
     else:
         db.session.commit()
 
     return jsonify({"message": "Poll created successfully", "poll_id": new_poll.poll_id}), 201
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
