@@ -62,21 +62,15 @@ class Question(db.Model):
     poll_id = db.Column(db.Integer, db.ForeignKey('Poll.poll_id'), primary_key=True)
     question_id = db.Column(db.Integer, primary_key=True, index=True)
     text = db.Column(db.String(500), nullable=False)
-
-class Options(db.Model):
-    __tablename__ = 'Options'
-    option_id = db.Column(db.Integer, primary_key=True)
-    poll_id = db.Column(db.Integer, db.ForeignKey('Question.poll_id'), primary_key=True, nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('Question.question_id'), primary_key=True, nullable=False)
-    text = db.Column(db.Boolean, nullable=False)
-    vote_count = db.Column(db.Integer, server_default='0', nullable=False)
+    count_support = db.Column(db.Integer, server_default='0', nullable=True)
+    count_oppose = db.Column(db.Integer, server_default='0', nullable=True)
 
 class Vote(db.Model):
     __tablename__ = 'Vote'
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), primary_key=True, nullable=False)
     poll_id = db.Column(db.Integer, db.ForeignKey('Options.poll_id'), primary_key=True, nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('Options.question_id'), primary_key=True, nullable=False)
-    option_id = db.Column(db.Integer, db.ForeignKey('Options.option_id'), nullable=False)
+    option = db.Column(db.Boolean, nullable=True)
     timestamp = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
 
