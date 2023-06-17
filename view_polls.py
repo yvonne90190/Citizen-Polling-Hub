@@ -1,4 +1,4 @@
-from ORM import app, db, User, Poll, Question, Options, Comment, login_manager
+from ORM import app, db, User, Poll, Question, Comment, login_manager
 from flask import jsonify, Blueprint
 from flask_login import login_required, current_user
 bp = Blueprint('view_polls', __name__)
@@ -109,12 +109,9 @@ def get_poll(poll_id):
     poll_data['questions'] = []
 
     for question in questions:
-        options = Options.query.filter_by(
-            poll_id=poll_id, question_id=question.question_id).all()
         question_data = {
             'question_id': question.question_id,
-            'text': question.text,
-            'options': [option.text for option in options]
+            'text': question.text
         }
         poll_data['questions'].append(question_data)
     # sort by question_id and inplace

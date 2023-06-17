@@ -1,4 +1,4 @@
-from ORM import app, db, Poll, Question, Vote, Options
+from ORM import app, db, Poll, Question, Vote
 from flask import jsonify, request, Blueprint
 from flask_login import login_required, current_user
 import datetime
@@ -46,14 +46,17 @@ def vote(poll_id):
 
         # Create a new vote object
         new_vote = Vote(user_id=current_user.user_id, poll_id=poll.poll_id,
-                        question_id=question_id, option_id=option_id)
+                        question_id=question_id, option=option_id)
         db.session.add(new_vote)
 
         # Increment the vote count for the selected option
-        selected_option = Options.query.get(
-            (option_id, poll.poll_id, question_id))
-        if selected_option:
-            selected_option.vote_count += 1
+        question_voted = Question.query.get(
+            (poll.poll_id, question_id))
+        if question_voted:
+            if option_id == 1:
+                question_voted.count_support += 1 
+            else:
+                question_voted.count_oppose += 1
 
     db.session.commit()
 

@@ -1,7 +1,7 @@
 
 from flask import jsonify, Blueprint
 from datetime import datetime
-from ORM import Poll, Options, Vote, Question, app, db
+from ORM import Poll, Vote, Question, app, db
 
 
 bp = Blueprint('poll_results', __name__)
@@ -31,18 +31,16 @@ def getPollResult(poll_id):
             'options': [],
             'result': "",
         }
-        options = Options.query.filter_by(
-            poll_id=poll_id, question_id=question.question_id).all()
-        total_cnt = Vote.query.filter_by(
-            poll_id=poll_id, question_id=question.question_id).count()
-        for option in options:
-            vote_cnt = option.vote_count
+        support_cnt, oppose_cnt = question.count_support, question.count_oppose
+        total_cnt = support_cnt + oppose_cnt
+        for vote_cnt in [support_cnt, oppose_cnt]:
             if total_cnt == 0:
                 percentage = 0
             else:
                 percentage = 100 * vote_cnt/total_cnt
+            option_id = 0 if vote_cnt == oppose_cnt else 0
             option_result = {
-                'option_id': option.option_id,
+                'option_id': option_id,
                 'percentage': percentage,
                 'vote_cnt': vote_cnt
             }
