@@ -68,8 +68,8 @@ class Question(db.Model):
 class Vote(db.Model):
     __tablename__ = 'Vote'
     user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), primary_key=True, nullable=False)
-    poll_id = db.Column(db.Integer, db.ForeignKey('Options.poll_id'), primary_key=True, nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('Options.question_id'), primary_key=True, nullable=False)
+    poll_id = db.Column(db.Integer, db.ForeignKey('Question.poll_id'), primary_key=True, nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('Question.question_id'), primary_key=True, nullable=False)
     option = db.Column(db.Boolean, nullable=True)
     timestamp = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
