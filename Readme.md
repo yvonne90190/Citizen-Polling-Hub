@@ -18,14 +18,14 @@ https://youtu.be/7V72-Nncm68
 ***
 ### User Requirements
 #### Entity type:
-1. User（用戶表）：
-  a. user_id：用戶唯一標識符。
-  b. username：用戶名。
-  c. email：用戶的電子郵件地址。
-  d. password：用戶的加密密碼。
-  e. registration_date：用戶註冊日期。
-2. Poll （公投議題表）：
-  a. poll_id：公投唯一標識符。
+- User（用戶表）：
+  - user_id：用戶唯一標識符。
+  - username：用戶名。
+  - email：用戶的電子郵件地址。
+  - password：用戶的加密密碼。
+  - registration_date：用戶註冊日期。
+- Poll （公投議題表）：
+  - poll_id：公投唯一標識符。
   b. title：公投的標題。
   c. description：公投的描述。
   d. creator_id*：創建公投的用戶ID（與User實體中的user_id相關聯）。
