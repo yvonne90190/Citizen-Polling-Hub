@@ -48,7 +48,6 @@ https://youtu.be/7V72-Nncm68
   - content: Content of the comment.
   - target_type: Type of entity the comment is targeting (e.g., poll, question, or option).
 
-***
 
 #### Relationship:
 - User participates in Poll: Users can participate in one or more polls.
@@ -65,7 +64,6 @@ https://youtu.be/7V72-Nncm68
 ### ER Model
 ![image](https://github.com/yvonne90190/Citizen-Polling-Hub/assets/74034659/1a553cd4-73b4-478e-b985-f4166da95db2)
 
-***
 
 ### system architecture
 ![Screenshot 2023-06-16 105254](https://github.com/dbmsFinal/documents/assets/64206644/5deec497-8428-4712-9ccd-07db158f6bc3)
