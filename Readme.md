@@ -18,6 +18,10 @@ https://youtu.be/7V72-Nncm68
 ## Relational Schema
 ![image](https://github.com/yvonne90190/Citizen-Polling-Hub/assets/74034659/a8a1eed2-7e77-4ab4-9279-cd4bcc2e33ff)
 
+## ER Model
+![image](https://github.com/yvonne90190/Citizen-Polling-Hub/assets/74034659/1a553cd4-73b4-478e-b985-f4166da95db2)
+
+
 
 
 ## How to use
