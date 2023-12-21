@@ -50,7 +50,7 @@ https://youtu.be/7V72-Nncm68
 
 ***
 
-####Relationship:
+#### Relationship:
 - User participates in Poll: Users can participate in one or more polls.
 - Poll contains Question: Each poll can contain one or more questions.
 - Question provides Option: Each question can have one or more options for users to choose from.
