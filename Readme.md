@@ -26,16 +26,34 @@ https://youtu.be/7V72-Nncm68
 
 ## How to use
 
-### 1. Install python3 and pip3
+### Backend
+
+#### 1. Install python3 and pip3
 ```
 sudo apt-get install python3
 
 ```
-### 2. Install dependency
+#### 2. Install dependency
 ```
 python3 install -r requirements.txt
 ```
-### 3. Run server
+#### 3. Run server
 ```
 python3 main.py
+```
+# dbms-final-project-front-end
+
+
+### How to run
+
+#### dependencies install
+
+```sh
+npm install
+```
+
+##### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
 ```
