@@ -1,6 +1,10 @@
 # nccu dbms final 111-2
 
 ***
+### System Description
+The main purpose of our referendum website is to allow users to create and participate in various referendums, thereby collecting opinions and views, and conducting public opinion polls on specific issues. This website can have many applications, such as political issues, product evaluations, community activities, and more.
+
+***
 
 ### frontend repo portal: 
 https://github.com/dbmsFinal/frontend
