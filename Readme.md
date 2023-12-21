@@ -41,10 +41,7 @@ python3 install -r requirements.txt
 ```
 python3 main.py
 ```
-# dbms-final-project-front-end
-
-
-### How to run
+### Frontend
 
 #### dependencies install
 
