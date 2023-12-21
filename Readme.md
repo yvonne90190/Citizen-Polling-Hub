@@ -18,42 +18,46 @@ https://youtu.be/7V72-Nncm68
 ***
 ### User Requirements
 #### Entity type:
-- User（用戶表）：
-  - user_id：用戶唯一標識符。
-  - username：用戶名。
-  - email：用戶的電子郵件地址。
-  - password：用戶的加密密碼。
-  - registration_date：用戶註冊日期。
-- Poll （公投議題表）：
-  - poll_id：公投唯一標識符。
-  - title：公投的標題。
-  - description：公投的描述。
-  - creator_id*：創建公投的用戶ID（與User實體中的user_id相關聯）。
-  - start_date：公投開始日期。
-  - end_date：公投結束日期。
-  - is_approved：
-- Question（問題）：
-  - question_id：問題唯一標識符。
-  - poll_id：問題所屬公投的ID（與Poll實體中的poll_id相關聯）。
-  - text：問題的文字描述。
-  - question_type：問題類型（例如，單選、多選）。
-- Option（選項）：
-  - option_id：選項唯一標識符。
-  - question_id：選項所屬問題的ID（與Question實體中的question_id相關
-  聯）。
-  - text：選項的文字描述。
-  - vote_count：選項收到的投票數。
-- Comment（評論）：
-  - comment_id：評論唯一標識符。
-  - user_id：發表評論的用戶ID（與User實體中的user_id相關聯）。
-  - content：評論的內容。
-  - target_type：評論針對的類型（例如，公投、問題或選項）。
-#### Relationship:
-  - User 參與 Poll：用戶可以參與一個或多個公投。
-  - Poll 包含 Question：每個公投可以包含一個或多個問題。
-  - Question 提供 Option：每個問題可以有一個或多個選項供用戶選擇。
-  - User 選擇 Option：用戶可以在每個問題中選擇一個選項。
-  - User 發布 Comment：用戶可以對公投、問題或選項發表評論
+- User Table:
+  - user_id: Unique identifier for the user.
+  - username: User's username.
+  - email: User's email address.
+  - password: Encrypted password for the user.
+  - registration_date: User's registration date.
+- Poll Table:
+  - poll_id: Unique identifier for the poll.
+  - title: Title of the poll.
+  - description: Description of the poll.
+  - creator_id*: User ID of the creator of the poll (associated with user_id in the User entity).
+  - start_date: Start date of the poll.
+  - end_date: End date of the poll.
+  - is_approved:
+- Question Table:
+  - question_id: Unique identifier for the question.
+  - poll_id: ID of the poll to which the question belongs (associated with poll_id in the Poll entity).
+  - text: Textual description of the question.
+  - question_type: Type of the question (e.g., single-choice, multiple-choice).
+- Option Table:
+  - option_id: Unique identifier for the option.
+  - question_id: ID of the question to which the option belongs (associated with question_id in the Question entity).
+  - text: Textual description of the option.
+  - vote_count: Number of votes received by the option.
+- Comment Table:
+  - comment_id: Unique identifier for the comment.
+  - user_id: User ID of the commenter (associated with user_id in the User entity).
+  - content: Content of the comment.
+  - target_type: Type of entity the comment is targeting (e.g., poll, question, or option).
+####Relationship:
+- User participates in Poll: Users can participate in one or more polls.
+- Poll contains Question: Each poll can contain one or more questions.
+- Question provides Option: Each question can have one or more options for users to choose from.
+- User selects Option: Users can choose one option for each question.
+- User publishes Comment: Users can comment on polls, questions, or options.
+
+
+
+
+
 
 ### Relational Schema
 ![image](https://github.com/yvonne90190/Citizen-Polling-Hub/assets/74034659/a8a1eed2-7e77-4ab4-9279-cd4bcc2e33ff)
